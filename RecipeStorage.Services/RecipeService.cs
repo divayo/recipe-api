@@ -22,6 +22,25 @@ namespace RecipeStorage.Services
         }
 
         /// <summary>
+        ///     Create new recipe
+        /// </summary>
+        /// <param name="dto"><see cref="PostRecipeRequestDto"/></param>
+        /// <returns>true or false</returns>
+        /// <exception cref="DuplicateRecipeException">If the recipe name already exists</exception>
+        /// <exception cref="Exception">General exception</exception>
+        public async Task<bool> CreateRecipeAsync(PostRecipeRequestDto dto)
+        {
+            var recipe = await _dbContext.Recipes.FirstOrDefaultAsync(r => r.Name.ToLower() == dto.Name.ToLower());
+
+            if (recipe != null) throw new DuplicateRecipeException();
+
+            var added =  await _dbContext.Recipes.AddAsync(new Data.Entities.Recipe { Name = dto.Name, ShortDescription = dto.ShortDescription });
+            var result = await _dbContext.SaveChangesAsync();
+
+            return result == 1;
+        }
+
+        /// <summary>
         ///     Get recipe
         /// </summary>
         /// <param name="dto"><see cref="GetRecipeRequestDto"/></param>
