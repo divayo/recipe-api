@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RecipeStorage.API</name>
+    </assembly>
+    <members>
+        <member name="M:RecipeStorage.API.Controllers.RecipeController.Get(System.Int32)">
+             <summary>
+                 Get recipe details
+             </summary>
+             <param name="recipeId">Id of the recipe</param>
+             <returns><see cref="T:RecipeStorage.Common.Dto.Responses.GetRecipeResponseDto"/></returns>
+             <remarks>
+             Sample request:
+            
+                 GET /api/recipe?recipeId=1
+            
+             </remarks>
+             <response code="200">Returns the recipe details</response>
+             <response code="400">If recipe id is invalid</response>
+             <response code="404">If the recipe id return no information</response>
+             <response code="500">If an error occured on the server.</response>
+        </member>
+    </members>
+</doc>
