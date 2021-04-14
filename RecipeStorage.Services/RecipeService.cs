@@ -5,6 +5,7 @@ using RecipeStorage.Common.Dto.Responses;
 using RecipeStorage.Common.Exceptions;
 using RecipeStorage.Data;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RecipeStorage.Services
@@ -29,7 +30,10 @@ namespace RecipeStorage.Services
         /// <exception cref="Exception">General exception</exception>
         public async Task<GetRecipeResponseDto> GetRecipeAsync(GetRecipeRequestDto dto)
         {
-            var result = await _dbContext.Recipes.FirstOrDefaultAsync(x => x.Id == dto.RecipeId);
+            var result = await _dbContext.Recipes
+                                            .Include(r => r.RecipeIngredients).ThenInclude(ri => ri.Ingredient)
+                                            .Include(r => r.RecipeRatings)
+                                            .FirstOrDefaultAsync(x => x.Id == dto.RecipeId);
 
             if (result == null) throw new RecipeNotFoundException();
 
@@ -37,7 +41,9 @@ namespace RecipeStorage.Services
             {
                 Id = result.Id,
                 Name = result.Name,
-                ShortDescription = result.ShortDescription
+                ShortDescription = result.ShortDescription,
+                NumberOfRatings = result.RecipeRatings.Count,
+                Ingredients = result.RecipeIngredients.Select(x => new Common.Dto.RecipeIngredientDto { Id =x.Id, Name = x.Ingredient.Name, Note = x.Note, Quanity = x.Quantity })
             };
         }
     }
