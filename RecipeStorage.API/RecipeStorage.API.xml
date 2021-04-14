@@ -21,5 +21,26 @@
              <response code="404">If the recipe id return no information</response>
              <response code="500">If an error occured on the server.</response>
         </member>
+        <member name="M:RecipeStorage.API.Controllers.RecipeController.Post(RecipeStorage.Common.Dto.Requests.PostRecipeRequestDto)">
+             <summary>
+                 Get recipe details
+             </summary>
+             <param name="dto"><see cref="T:RecipeStorage.Common.Dto.Requests.PostRecipeRequestDto"/></param>
+             <returns></returns>
+             <remarks>
+             Sample request:
+            
+                 POST /api/recipe
+                 
+                 {
+                     "name" : "recipe_name",
+                     "shortDescription" : "short description"
+                 }
+            
+             </remarks>
+             <response code="201">The recipe is succesfully created</response>
+             <response code="400">The request is invalid or a recipe with that name already exists</response>
+             <response code="500">If an error occured on the server.</response>
+        </member>
     </members>
 </doc>
