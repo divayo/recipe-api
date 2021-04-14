@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RecipeStorage.Data.Entities
 {
-    public class Recipe
+    public class RecipeRating
     {
         /// <summary>
         ///     Id of the recipe
@@ -18,21 +18,24 @@ namespace RecipeStorage.Data.Entities
         public long Id { get; set; }
 
         /// <summary>
-        ///     Name of the recipe
+        ///     Recipe Id
         /// </summary>
         [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+        [ForeignKey("Recipe")]
+        public long RecipeId { get; set; }
 
         /// <summary>
-        ///     Short description of the recipe
+        ///     Value of the rating out of 10
         /// </summary>
-        [StringLength(256)]
-        public string ShortDescription { get; set; }
+        [Required]
+        public int RatingValue { get; set; }
 
-        public double? OverallRating { get; set; }
+        /// <summary>
+        ///  Id of the user who submitted the rating
+        /// </summary>
+        [Required]
+        public Guid UserId { get; set; }
 
-        public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
-        public virtual ICollection<RecipeRating> RecipeRatings { get; set; }
+        public virtual Recipe Recipe { get; set; }
     }
 }

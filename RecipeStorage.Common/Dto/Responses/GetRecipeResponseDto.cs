@@ -11,5 +11,8 @@ namespace RecipeStorage.Common.Dto.Responses
         public long Id { get; set; }
         public string Name { get; set; }
         public string ShortDescription { get; set; }
+        public double? OverallRating { get; set; }
+        public int NumberOfRatings { get; set; }
+        public IEnumerable<RecipeIngredientDto> Ingredients { get; set; }
     }
 }
