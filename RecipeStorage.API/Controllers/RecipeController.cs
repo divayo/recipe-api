@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RecipeStorage.Common.Dto.Requests;
 using RecipeStorage.Common.Dto.Responses;
 using RecipeStorage.Common.Exceptions;
 using RecipeStorage.Services;
@@ -60,6 +62,50 @@ namespace RecipeStorage.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving recipe with id {recipeId}");
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        /// <summary>
+        ///     Get recipe details
+        /// </summary>
+        /// <param name="dto"><see cref="PostRecipeRequestDto"/></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/recipe
+        ///     
+        ///     {
+        ///         "name" : "recipe_name",
+        ///         "shortDescription" : "short description"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">The recipe is succesfully created</response>
+        /// <response code="400">The request is invalid or a recipe with that name already exists</response>
+        /// <response code="500">If an error occured on the server.</response>
+        [HttpPost]
+        //[Authorize(Roles = "User, Adminstrator")]
+        public async Task<IActionResult> Post([FromBody] PostRecipeRequestDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Name and description are required."); // Add some custom error handling
+            }
+
+            try
+            {
+                var result = await _recipeService.CreateRecipeAsync(dto);
+                return new StatusCodeResult(StatusCodes.Status201Created);
+            }
+            catch(DuplicateRecipeException ex)
+            {
+                return BadRequest("A recipe with this name already exists");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Error creating new recipe");
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }

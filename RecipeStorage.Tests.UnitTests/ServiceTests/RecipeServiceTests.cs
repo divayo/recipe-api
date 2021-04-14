@@ -22,7 +22,7 @@ namespace RecipeStorage.Tests.UnitTests.ServiceTests
             var dbContext = Helpers.DbContextHelper.GetInMemoryDbContext("getrecipeasync_success");
             DataService.AddSeedData(dbContext);
             var logger = new Mock<ILogger<RecipeService>>();
-            var service = new RecipeService(dbContext, logger.Object);
+            IRecipeService service = new RecipeService(dbContext, logger.Object);
             var dto = new GetRecipeRequestDto { RecipeId = 1 };
 
             // act
@@ -37,9 +37,9 @@ namespace RecipeStorage.Tests.UnitTests.ServiceTests
         public async Task GetRecipeAsync_NotFoundException()
         {
             // arrange
-            var dbContext = Helpers.DbContextHelper.GetInMemoryDbContext("getrecipeasync_success");
+            var dbContext = Helpers.DbContextHelper.GetInMemoryDbContext("getrecipeasync_fail");
             var logger = new Mock<ILogger<RecipeService>>();
-            var service = new RecipeService(dbContext, logger.Object);
+            IRecipeService service = new RecipeService(dbContext, logger.Object);
             var dto = new GetRecipeRequestDto { RecipeId = 0 };
 
             // act
@@ -47,6 +47,23 @@ namespace RecipeStorage.Tests.UnitTests.ServiceTests
 
             // assert
             await Assert.ThrowsAsync<RecipeNotFoundException>(result);
+        }
+
+        [Fact]
+        public async Task CreateRecipeAsync_Success()
+        {
+            // arrange
+            var dbContext = Helpers.DbContextHelper.GetInMemoryDbContext("createrecipeasync_success");
+            var logger = new Mock<ILogger<RecipeService>>();
+            IRecipeService service = new RecipeService(dbContext, logger.Object);
+            var dto = new PostRecipeRequestDto { Name = "test_recipe", ShortDescription = "A short description" };
+
+            // act
+            var result = await service.CreateRecipeAsync(dto);
+
+            // assert
+            Assert.True(result);
+            Assert.Equal(1, dbContext.Recipes.Count());
         }
     }
 }

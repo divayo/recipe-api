@@ -33,3 +33,4 @@ CountryAPI, this api would simply return a list of countries and perhaps regions
 
 Ingredient quantity: Every recipe has ingredients in different quantities, I have used a string for now but it would make sense to convert this to a look up table so we can change the amount needed based on the users preferred measurements (US or metric for example)
 
+If I had more time the next logical step was the use some third-party tools, like automapper to easily map between enties and dto. Add integration tests by testing from the controller down. Then adding authorization to the insert/update (post/put/delete) endpoints.
