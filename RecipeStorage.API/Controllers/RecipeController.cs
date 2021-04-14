@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RecipeStorage.Common.Dto.Requests;
@@ -85,6 +86,7 @@ namespace RecipeStorage.API.Controllers
         /// <response code="400">The request is invalid or a recipe with that name already exists</response>
         /// <response code="500">If an error occured on the server.</response>
         [HttpPost]
+        //[Authorize(Roles = "User, Adminstrator")]
         public async Task<IActionResult> Post([FromBody] PostRecipeRequestDto dto)
         {
             if (!ModelState.IsValid)
